@@ -1,20 +1,15 @@
-FROM node:12.9.0-alpine
+FROM node:12.5.0-alpine
 
-ENV APP_HOME /app
-ENV PATH ${APP_HOME}/node_modules/.bin:$PATH
-ENV TZ Asia/Tokyo
+ENV HOME="/app" \
+    LANG=C.UTF-8 \
+    TZ=Asia/Tokyo 
+
+WORKDIR ${HOME}
+
+RUN apk update && \
+    apk upgrade && \
+    npm install -g npm && \
+    npm install -g @vue/cli
 
 ENV HOST 0.0.0.0
-ENV PORT 8080
-
-WORKDIR ${APP_HOME}
-ADD . ${APP_HOME}
-
-RUN apk update \
-    && apk upgrade \
-    && yarn install \
-    && rm -rf /var/cache/apk/*
-
-EXPOSE ${PORT}
-
-CMD ["yarn", "dev"]
+EXPOSE 3000
